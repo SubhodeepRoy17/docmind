@@ -1,23 +1,98 @@
+import Link from 'next/link'
+import { FileText, MessageSquare, Zap } from 'lucide-react'
+
 export default function Page() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-[color:light-dark(#fff,#000)] text-[color:light-dark(#000,#fff)]">
-      <svg
-        aria-hidden="true"
-        className="size-20"
-        fill="none"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-        stroke="currentColor"
-        strokeWidth="0.5"
-      >
-        <path
-          d="M14.2 14.2H17V6.9375C17 4.76288 15.2371 3 13.0625 3H5.8V5.8M14.2 14.2V7.79063L7.79062 14.2H14.2ZM14.2 14.2V17H6.9375C4.76288 17 3 15.2371 3 13.0625V5.8H5.8M5.8 5.8V12.2313L12.2313 5.8H5.8Z"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <p className="absolute left-1/2 top-[calc(50%+56px)] -translate-x-1/2 whitespace-nowrap text-sm font-medium text-muted-foreground">
-        Your v0 generation will show here.
-      </p>
+    <main className="min-h-screen bg-background">
+      <div className="mx-auto max-w-4xl px-4 py-16 md:py-24">
+        {/* Hero */}
+        <div className="mb-16 text-center">
+          <h1 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl text-balance">
+            Welcome to <span className="text-primary">DocMind</span>
+          </h1>
+          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto text-balance">
+            Upload your documents and ask questions. Powered by AI, backed by your data.
+          </p>
+          
+          <Link
+            href="/docmind"
+            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-3 text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+          >
+            Start using DocMind
+            <span>→</span>
+          </Link>
+        </div>
+
+        {/* Features */}
+        <div className="grid gap-6 md:grid-cols-3 mb-16">
+          <div className="rounded-lg border border-border bg-card p-6">
+            <FileText className="h-8 w-8 text-primary mb-3" />
+            <h3 className="font-semibold text-card-foreground mb-2">Upload Documents</h3>
+            <p className="text-sm text-muted-foreground">
+              Support for PDF, TXT, and DOCX files. Easily manage multiple documents.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-border bg-card p-6">
+            <MessageSquare className="h-8 w-8 text-primary mb-3" />
+            <h3 className="font-semibold text-card-foreground mb-2">Ask Questions</h3>
+            <p className="text-sm text-muted-foreground">
+              Get intelligent answers based on your document content with source citations.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-border bg-card p-6">
+            <Zap className="h-8 w-8 text-primary mb-3" />
+            <h3 className="font-semibold text-card-foreground mb-2">Powered by AI</h3>
+            <p className="text-sm text-muted-foreground">
+              Uses Claude and advanced retrieval techniques for accurate responses.
+            </p>
+          </div>
+        </div>
+
+        {/* How It Works */}
+        <div className="rounded-lg border border-border bg-card p-8">
+          <h2 className="text-2xl font-bold text-card-foreground mb-6">How It Works</h2>
+          
+          <div className="space-y-6">
+            <div className="flex gap-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-semibold">
+                1
+              </div>
+              <div>
+                <h3 className="font-semibold text-card-foreground">Upload Documents</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Upload your PDF, text, or Word documents to DocMind
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-semibold">
+                2
+              </div>
+              <div>
+                <h3 className="font-semibold text-card-foreground">Ask Questions</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Type any question about your documents in natural language
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground font-semibold">
+                3
+              </div>
+              <div>
+                <h3 className="font-semibold text-card-foreground">Get Answers</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Receive accurate answers with sources cited from your documents
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   )
 }
