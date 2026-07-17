@@ -78,6 +78,23 @@ pnpm dev
 
 Frontend will be available at `http://localhost:3000`
 
+## Production Deployment
+
+### Quick Deploy (8 minutes)
+
+**Option 1: Render Backend + Vercel Frontend (Recommended - Free to Start)**
+1. Deploy backend on Render: See [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md)
+2. Deploy frontend on Vercel: See [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md)
+
+**Option 2: Docker Compose**
+```bash
+docker-compose up --build
+# Access at http://localhost:3000
+```
+
+For detailed deployment instructions, see [DEPLOY_NOW.md](DEPLOY_NOW.md) and [DEPLOYMENT.md](DEPLOYMENT.md)
+
+
 ## Docker Deployment
 
 ### Build and Run with Docker Compose
