@@ -42,45 +42,48 @@ NEXT_PUBLIC_BACKEND_URL=https://your-backend-domain.com
 
 ## Backend Deployment Options
 
-### Option 1: Railway.app (Easiest)
+### Option 1: Render.com (Recommended - Free Tier Available)
 
-1. **Connect GitHub Repository**
-   - Go to railway.app
-   - Click "Create New"
-   - Connect your GitHub repo
+1. **Create Web Service**
+   - Go to https://render.com
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repo `SubhodeepRoy17/docmind`
 
 2. **Configure Service**
-   - Service: Custom Docker
-   - Build: `docker-compose build backend`
-   - Port: `8000`
+   - Name: `docmind-backend`
+   - Runtime: `Python 3.11`
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT backend.main:app`
 
 3. **Set Environment Variables**
    - `ANTHROPIC_API_KEY`: Your Anthropic API key
+
+4. **Deploy**
+   - Click "Create Web Service"
+   - Render auto-deploys on git push
+   - Copy the public URL (e.g., `https://docmind-backend.onrender.com`)
+   - Note: Free tier services spin down after 15 minutes of inactivity
+
+### Option 2: Railway.app
+
+1. **Create Web Service**
+   - Go to https://railway.app
+   - Click "New Project"
+   - Connect your GitHub repo `SubhodeepRoy17/docmind`
+
+2. **Configure Service**
+   - Service: Web Service
+   - Root Directory: `backend`
+   - Runtime: Python 3.11
+
+3. **Set Environment Variables**
+   - `ANTHROPIC_API_KEY`: Your key
    - `PORT`: 8000
 
 4. **Deploy**
    - Railway auto-deploys on git push
-   - Copy the public URL (e.g., `https://backend-production-xxxx.railway.app`)
-
-### Option 2: Render.com
-
-1. **Create New Web Service**
-   - Connect GitHub repo
-   - Select Docker
-
-2. **Configure Build Command**
-   ```bash
-   cd backend && pip install -r requirements.txt
-   ```
-
-3. **Configure Start Command**
-   ```bash
-   cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
-   ```
-
-4. **Set Environment Variables**
-   - `ANTHROPIC_API_KEY`: Your key
-   - `PYTHONUNBUFFERED`: 1
+   - Get URL from Railway dashboard
+   - Note: Railway free trial has limitations
 
 ### Option 3: AWS EC2 or DigitalOcean
 

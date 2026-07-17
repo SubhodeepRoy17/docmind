@@ -58,6 +58,25 @@ A complete **Retrieval-Augmented Generation (RAG) application** that allows user
 - URL: https://github.com/SubhodeepRoy17/docmind
 - Privacy: Public
 - Status: All code pushed, no secrets in history
+
+---
+
+## Quick Deployment (Updated for Render)
+
+### Backend on Render (Recommended)
+1. Go to https://render.com
+2. Create new Web Service from `SubhodeepRoy17/docmind` GitHub repo
+3. Configure: Python 3.11, Build: `pip install -r requirements.txt`, Start: `gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT backend.main:app`
+4. Add environment variable: `ANTHROPIC_API_KEY`
+5. Deploy and get your backend URL
+
+### Frontend on Vercel
+1. Go to https://vercel.com
+2. Import `SubhodeepRoy17/docmind` from GitHub
+3. Set environment variable: `NEXT_PUBLIC_BACKEND_URL` = Your Render backend URL
+4. Deploy and you're live!
+
+**Time to deployment: ~8 minutes**
 - Latest commit: Verification report added
 
 ---
@@ -280,7 +299,7 @@ docmind/
 │   │   ├── rag_engine.py
 │   │   ├── vector_store.py
 │   │   └── document_processor.py
-│   ├── requirements.txt
+│   ├���─ requirements.txt
 │   ├── Dockerfile
 │   └── uploads/
 ├── docker-compose.yml

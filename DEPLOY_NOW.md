@@ -5,20 +5,25 @@ Your code is ready to deploy! Here's how to get it live in minutes.
 ## GitHub Repository
 ✓ Repository is already created and all code is pushed to: https://github.com/SubhodeepRoy17/docmind
 
-## Option 1: Deploy Backend on Railway (Recommended - 5 mins)
+## Option 1: Deploy Backend on Render (Recommended - 5 mins)
 
-Railway is the easiest way to deploy the FastAPI backend.
+Render offers a free tier and is the easiest way to deploy the FastAPI backend.
 
 ### Steps:
-1. Go to https://railway.app
-2. Click "New Project"
-3. Select "Deploy from GitHub"
-4. Connect your GitHub and select `SubhodeepRoy17/docmind`
-5. Railway will automatically detect the `railway.json` configuration
-6. Set environment variables:
-   - `ANTHROPIC_API_KEY`: Your Claude API key
-7. Click "Deploy"
-8. Get your backend URL from the Railway dashboard (looks like `https://docmind-prod.railway.app`)
+1. Go to https://render.com
+2. Sign up and create a new account
+3. Click "New +" → "Web Service"
+4. Connect GitHub and select `SubhodeepRoy17/docmind`
+5. Configure the service:
+   - Name: `docmind-backend`
+   - Environment: `Python 3.11`
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `gunicorn -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT backend.main:app`
+6. Add environment variable:
+   - Key: `ANTHROPIC_API_KEY`
+   - Value: Your Claude API key
+7. Click "Create Web Service"
+8. Get your backend URL from Render dashboard (looks like `https://docmind-backend.onrender.com`)
 
 ## Option 2: Deploy Frontend on Vercel (Recommended - 3 mins)
 
@@ -29,17 +34,17 @@ Vercel is perfect for Next.js apps.
 2. Click "New Project"
 3. Import `SubhodeepRoy17/docmind` from GitHub
 4. Set environment variables:
-   - `NEXT_PUBLIC_BACKEND_URL`: Your Railway backend URL (from Option 1)
+   - `NEXT_PUBLIC_BACKEND_URL`: Your Render backend URL (from Option 1, e.g., `https://docmind-backend.onrender.com`)
 5. Click "Deploy"
 6. Your frontend will be live at `https://docmind-*.vercel.app`
 
-## Option 3: Deploy Both on Railway (Advanced)
+## Option 3: Deploy Both on Render (Advanced)
 
 If you want everything on one platform:
 
-1. Create two separate Railway projects
-2. One for backend (using `backend/` directory)
-3. One for frontend (using root directory with Next.js)
+1. Deploy backend first (Option 1 above)
+2. Deploy frontend with backend URL (Option 2 above)
+3. Both will be on the Render platform
 
 ## Environment Variables Needed
 
@@ -82,9 +87,10 @@ docker-compose up --build
 ## Troubleshooting
 
 ### Backend not responding
-- Check Railway logs for errors
-- Verify ANTHROPIC_API_KEY is set
-- Ensure backend URL is correct in frontend
+- Check Render logs for errors: go to your service dashboard and click "Logs"
+- Verify ANTHROPIC_API_KEY is set in Render environment variables
+- Ensure backend URL is correct in frontend (NEXT_PUBLIC_BACKEND_URL)
+- Note: Free tier on Render may spin down after 15 minutes of inactivity, causing first request to be slow
 
 ### Upload fails with "Failed to fetch"
 - Check NEXT_PUBLIC_BACKEND_URL is set correctly
@@ -120,6 +126,18 @@ docker-compose up --build
 ## Support
 
 For issues, check:
-- Railway logs: https://railway.app/dashboard
+- Render logs: https://render.com/dashboard (select your service and view Logs tab)
 - Vercel logs: https://vercel.com/dashboard
 - GitHub issues: https://github.com/SubhodeepRoy17/docmind/issues
+
+## Important Notes
+
+**Render Free Tier:**
+- Services spin down after 15 minutes of inactivity
+- First request after spin-down may take 30-60 seconds
+- For production, upgrade to paid tier or use paid plan on other platforms
+
+**Pricing:**
+- Render Backend: Free tier available
+- Vercel Frontend: Free tier available
+- Total cost to get started: $0
