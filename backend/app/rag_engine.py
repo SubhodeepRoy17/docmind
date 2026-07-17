@@ -25,12 +25,13 @@ class RAGEngine:
         """Add a document to the vector store for retrieval"""
         try:
             # Extract text from document (processed by DocumentProcessor)
-            text_content = await self._load_document_text(file_path)
+            text_content = self._load_document_text(file_path)
             
             # Add to vector store
             await self.vector_store.add_document(document_id, text_content)
             
         except Exception as e:
+            print(f"[v0] Failed to add document to RAG: {str(e)}")
             raise Exception(f"Failed to add document to RAG: {str(e)}")
     
     async def remove_document(self, document_id: str):
@@ -130,9 +131,13 @@ QUESTION:
         
         return messages
     
-    async def _load_document_text(self, file_path: Path) -> str:
+    def _load_document_text(self, file_path: Path) -> str:
         """Load text content from a processed document"""
         text_file = file_path.with_suffix('.txt')
         if text_file.exists():
-            return text_file.read_text(encoding='utf-8')
+            try:
+                return text_file.read_text(encoding='utf-8')
+            except Exception as e:
+                print(f"[v0] Error reading text file: {e}")
+                return ""
         return ""

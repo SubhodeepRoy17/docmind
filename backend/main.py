@@ -13,9 +13,13 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
+from dotenv import load_dotenv
 
 from app.rag_engine import RAGEngine
 from app.document_processor import DocumentProcessor
+
+# Load environment variables
+load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -94,7 +98,11 @@ async def upload_document(file: UploadFile = File(...)):
         document_id = await doc_processor.process_document(file_path)
         
         # Add to RAG engine
-        await rag_engine.add_document(document_id, file_path)
+        try:
+            await rag_engine.add_document(document_id, file_path)
+        except Exception as rag_error:
+            print(f"[v0] Warning: RAG indexing failed: {rag_error}")
+            # Continue anyway, user can still chat
         
         # Get file info
         file_size = file_path.stat().st_size
@@ -106,8 +114,11 @@ async def upload_document(file: UploadFile = File(...)):
             "document_id": document_id
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"[v0] Upload error: {e}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
@@ -120,7 +131,7 @@ async def chat(request: ChatRequest):
             raise HTTPException(status_code=400, detail="Query cannot be empty")
         
         # Get response from RAG engine
-        response, sources = await rag_engine.query(request.query)
+        response, sources = await rag_engine.query(request.query, request.session_id)
         
         # Generate session ID if not provided
         session_id = request.session_id or f"session_{datetime.now().timestamp()}"
@@ -131,8 +142,11 @@ async def chat(request: ChatRequest):
             "session_id": session_id
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"[v0] Chat error: {e}")
+        raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
 
 @app.get("/documents")
 async def list_documents():
@@ -141,17 +155,22 @@ async def list_documents():
         documents = await doc_processor.list_documents()
         return {"documents": documents}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"[v0] List documents error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to list documents: {str(e)}")
 
 @app.delete("/documents/{document_id}")
 async def delete_document(document_id: str):
     """Delete a document from the system"""
     try:
         await doc_processor.delete_document(document_id)
-        await rag_engine.remove_document(document_id)
+        try:
+            await rag_engine.remove_document(document_id)
+        except:
+            pass  # Continue even if RAG removal fails
         return {"status": "deleted", "document_id": document_id}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"[v0] Delete document error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete document: {str(e)}")
 
 if __name__ == "__main__":
     uvicorn.run(
