@@ -15,8 +15,8 @@ from pydantic import BaseModel
 import uvicorn
 from dotenv import load_dotenv
 
-from app.rag_engine import RAGEngine
-from app.document_processor import DocumentProcessor
+from .app.rag_engine import RAGEngine
+from .app.document_processor import DocumentProcessor
 
 # Load environment variables
 load_dotenv()

@@ -8,7 +8,7 @@ from typing import Optional
 import json
 
 from anthropic import Anthropic
-from app.vector_store import VectorStore
+from .vector_store import VectorStore
 
 class RAGEngine:
     def __init__(self):
