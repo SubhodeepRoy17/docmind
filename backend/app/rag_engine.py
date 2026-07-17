@@ -12,14 +12,26 @@ from .vector_store import VectorStore
 
 class RAGEngine:
     def __init__(self):
-        """Initialize RAG engine with Anthropic client"""
+        """Initialize RAG engine state.
+
+        Anthropic client is created lazily to avoid crashing app startup
+        if API credentials or SDK runtime dependencies are misconfigured.
+        """
+        self.client = None
+        self.vector_store = VectorStore()
+        self.conversation_history = {}
+
+    def _get_client(self) -> Anthropic:
+        """Create or return a cached Anthropic client."""
+        if self.client is not None:
+            return self.client
+
         api_key = os.getenv("ANTHROPIC_API_KEY")
         if not api_key:
             raise ValueError("ANTHROPIC_API_KEY environment variable not set")
-        
-        self.client = Anthropic()
-        self.vector_store = VectorStore()
-        self.conversation_history = {}
+
+        self.client = Anthropic(api_key=api_key)
+        return self.client
         
     async def add_document(self, document_id: str, file_path: Path):
         """Add a document to the vector store for retrieval"""
@@ -60,7 +72,8 @@ class RAGEngine:
             messages = self._build_messages(query, context, history)
             
             # Get response from Claude
-            response = self.client.messages.create(
+            client = self._get_client()
+            response = client.messages.create(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=1024,
                 system="""You are DocMind, an intelligent document assistant. 
